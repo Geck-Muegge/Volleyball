@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Punktestände</title>
+    <link rel="stylesheet" href=""{{asset('css/bootstrap.min.css')}}"">
+</head>
+<body>
+    @include('partials.header') <!-- Kopfzeile einfügen -->
+    <div class="container mt-5">
+        <h1>Punktestände nach Gruppen</h1>
+
+        <form method="GET" action="{{ route('spiele.standings') }}" class="mb-3">
+            <div class="form-group">
+                <label for="gruppenid">Wähle eine Gruppe:</label>
+                <select name="gruppenid" id="gruppenid" class="form-control" onchange="this.form.submit()">
+                    <option value="">Alle Gruppen</option>
+                    @foreach($spielgruppen as $gruppe)
+                        <option value="{{ $gruppe->gruppenBez }}" {{ (isset($selectedGroupId) && $selectedGroupId == $gruppe->gruppenBez) ? 'selected' : '' }}>
+                            {{ $gruppe->gruppenBez }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+        </form>
+        <div class="container mt-5">
+        <!-- Überprüfen, ob eine Fehlermeldung gesetzt wurde -->
+        @if(session('error'))
+            <div class="alert alert-danger">
+                {{ session('error') }}
+            </div>
+        @endif
+
+         @foreach ($sortedTeamsByGroup as $gruppe => $teams)
+         <form action="{{ route('platzierungen.speichern') }}" method="POST">
+            @csrf <!-- CSRF-Token für Sicherheit -->
+            <h2>Tabelle Gruppe {{ $gruppe }}:</h2>
+            <input type="hidden" name="gruppe" value="{{ $selectedGroupId }}"> <!-- Verstecktes Eingabefeld für gruppenid -->
+
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Platz</th>
+                        <th>Team</th>
+                        <th>Spiele</th>
+                        <th colspan="3"> Spielpunkte</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody> 
+                    @php $i = 1; @endphp <!-- Zähler initialisieren -->
+                    @foreach ($teams as $team)
+                        <tr>
+                            <td width="10">{{ $i++ }}</td>
+                            <td width="300">{{ $team['team'] }}</td> <!-- Zugriff auf den Teamnamen -->
+                            <td width="50">{{ $team['punkte'] }}</td> <!-- Zugriff auf die Spiel -->
+                            <td width="20">{{ $team['spielpunkte'] }}</td> <!-- Zugriff auf die gewonnenen Punkte -->
+                            <td width="3"> : </td>
+                            <td >{{ $team['gegnerpunkte'] }}</td>
+                        </tr>
+                    @endforeach
+                    
+                </tbody>
+            </table>
+            <p> </p>
+            <button type="submit" class="btn btn-primary">Beenden und in Datenbank übertragen</button>
+            <p> </p>
+        </form>
+        @endforeach
+    </div>
+    
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
+

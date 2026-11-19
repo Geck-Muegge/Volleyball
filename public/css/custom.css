@@ -1,0 +1,24 @@
+/* public/css/custom.css */
+
+.gruppe-a {
+        background-color: #fcf36f; /* gelb */
+        color: #333; /* Textfarbe */
+        font-weight: bold;
+    }
+.gruppe-b {
+        background-color: #728bde; /* blau */
+        color: #333; /* Textfarbe */
+        font-weight: bold;
+    }
+.gruppe-c {
+        background-color: #ec717d; /* Rot */
+        color: #333;/* Textfarbe */
+        font-weight: bold;
+    }
+.gruppe-d {
+        background-color: #65da77; /* grün */
+       color: #333; /* Textfarbe */
+       font-weight: bold;
+}
+
+
